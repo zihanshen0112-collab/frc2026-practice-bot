@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
+
 //Swerve底盘
 //管理SwerveModule，处理驱动控制和里程计
 public class SwerveDrive extends SubsystemBase {
@@ -19,7 +22,8 @@ public class SwerveDrive extends SubsystemBase {
     //SwerveModule
     private final SwerveModule[] m_modules = new SwerveModule[4];
     
-    // 陀螺仪（未知型号，暂不实现）
+    // 陀螺仪（Pogeon2）
+    private final Pigeon2 m_gyro = new Pigeon2(Constants.CAN.PIGEON_ID);
     private Rotation2d m_gyroAngle = new Rotation2d();
     //private double m_gyroOffset = 0.0;
 
@@ -54,6 +58,9 @@ public class SwerveDrive extends SubsystemBase {
             Constants.Module.BACK_RIGHT_OFFSET_RADS
         );
 
+        //初始化陀螺仪
+        m_gyro.setYaw(0);
+
         // 初始化里程计
         m_poseEstimator = new SwerveDrivePoseEstimator(
             Constants.Drivetrain.KINEMATICS,
@@ -63,8 +70,13 @@ public class SwerveDrive extends SubsystemBase {
         );
     }
 
+    
+
     @Override
     public void periodic() {
+        // 从Pigeon2读取真实角度（单位：度）
+        double yawDegrees = m_gyro.getYaw().getValueAsDouble();
+        m_gyroAngle = Rotation2d.fromDegrees(yawDegrees);
         // 每20ms更新一次里程计
         m_poseEstimator.update(m_gyroAngle, getModulePositions());
     }
@@ -118,10 +130,11 @@ public class SwerveDrive extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] targetStates) {
         // 速度限制（防止超过物理极限）
         SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, Constants.Drivetrain.MAX_FORWARD_SPEED_MPS);
-        
+        //获取角速度
+        double currentTurnRate = getTurnRate();
         // 给每个模块发送目标
         for (int i = 0; i < 4; i++) {
-            m_modules[i].setDesiredState(targetStates[i]);
+            m_modules[i].setDesiredState(targetStates[i],currentTurnRate);
         }
     }
 
@@ -137,7 +150,14 @@ public class SwerveDrive extends SubsystemBase {
 
     //重置陀螺仪-->0（当前方向设为前方）
     public void zeroGyro() {
-        m_gyroAngle = new Rotation2d();
+    m_gyro.setYaw(0);  // 重置物理陀螺仪
+    // m_gyroAngle 会在下次periodic()中自动更新
+    }
+
+    // 获取当前旋转角速度（弧度/秒）
+    public double getTurnRate() {
+        // Pigeon2的getAngularVelocityZWorld()返回的是度/秒，转成弧度/秒
+        return Math.toRadians(m_gyro.getAngularVelocityZWorld().getValueAsDouble());
     }
 
     //获取当前机器人位姿（向量）

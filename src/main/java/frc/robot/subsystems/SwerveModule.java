@@ -36,8 +36,8 @@ public class SwerveModule {
     private void configDriveMotor() {
         TalonFXConfiguration config = new TalonFXConfiguration();
         //不给电时可以推动
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        //NeutralModeValue.Break 不给电锁住
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        //NeutralModeValue.Coast 不给电可以移动
         config.CurrentLimits.SupplyCurrentLimit = Constants.Module.DRIVE_CURRENT_LIMIT;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveMotor.getConfigurator().apply(config);
@@ -47,7 +47,7 @@ public class SwerveModule {
     private void configSteerMotor() {
         TalonFXConfiguration config = new TalonFXConfiguration();
         //不给电时可以推动
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config.CurrentLimits.SupplyCurrentLimit = Constants.Module.STEER_CURRENT_LIMIT;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
@@ -60,7 +60,7 @@ public class SwerveModule {
     }
 
     // 设置模块目标状态（速度+角度）
-    public void setDesiredState(SwerveModuleState desiredState) {
+    public void setDesiredState(SwerveModuleState desiredState, double robotTurnRate) {
         // 优化：避免模块旋转超过90度
         desiredState.optimize(getAngle());
 
@@ -70,9 +70,12 @@ public class SwerveModule {
 
         // 转向：角度(rad) → 电机位置(圈)
         double targetRotations = desiredState.angle.getRadians() / Constants.Module.STEER_RAD_PER_ROT;
-        steerMotor.setControl(steerPosition.withPosition(targetRotations));
+        double feedforwardRotations = robotTurnRate * 0.05 * 0.02;
+        steerMotor.setControl(
+        steerPosition.withPosition(targetRotations + feedforwardRotations)
+        );
     }
-
+    
     //重制电机
     public void reset() {
         steerMotor.setPosition(0);

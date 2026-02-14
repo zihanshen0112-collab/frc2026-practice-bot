@@ -126,6 +126,6 @@ public final class Constants {
 
     public static final class State {
         //是否启用陀螺仪
-        public static final boolean FIELD_RELATIVE = false;
+        public static final boolean FIELD_RELATIVE = true;
     }
 }
