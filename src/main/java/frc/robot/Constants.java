@@ -49,7 +49,7 @@ public final class Constants {
         public static final double STEER_RAD_PER_ROT = 2 * Math.PI / STEER_GEAR_RATIO;
 
         // ===== 转向电机 PID 值（需实测调整）=====
-        public static final double STEER_kP = 0.1;
+        public static final double STEER_kP = 0.5;
         public static final double STEER_kI = 0.0;
         public static final double STEER_kD = 0.0;
 
