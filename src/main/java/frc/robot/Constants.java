@@ -25,7 +25,7 @@ public final class Constants {
         public static final int BACK_RIGHT_STEER   = 4;
 
         // 陀螺仪（如果有，暂时预留）
-        public static final int PIGEON_ID = 0;
+        public static final int PIGEON_ID = 15;
     }
 
     // ========== 驱动模块物理参数 ==========
@@ -67,10 +67,10 @@ public final class Constants {
 
     // ========== 机器人尺寸（轮子位置，单位：米）==========
     public static final class Drivetrain {
-        //车宽一半（左右轮距的一半） 
+        //车宽一半（左右轮距的一半） 23inch
         public static final double TRACK_WIDTH_HALF = 0.3; //待修改
         
-        //车长一半（前后轮距的一半）
+        //车长一半（前后轮距的一半） 23inch
         public static final double WHEEL_BASE_HALF = 0.3;  //待修改
 
         //四个模块相对于机器人中心的坐标
