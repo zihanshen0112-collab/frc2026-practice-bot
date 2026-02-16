@@ -231,8 +231,7 @@ public class SwerveModule {
      */
     public SwerveModuleState getState() {
         // 计算实际速度（RPS * 转换系数 = 米/秒）
-        double speedMPS = driveMotor.getVelocity().getValueAsDouble() * 
-                          Constants.Module.DRIVE_MPS_PER_RPS;
+        double speedMPS = driveMotor.getVelocity().getValueAsDouble() * Constants.Module.DRIVE_MPS_PER_RPS;
         
         // 获取当前角度
         Rotation2d angle = getAngle();
@@ -246,8 +245,7 @@ public class SwerveModule {
      */
     public SwerveModulePosition getPosition() {
         // 计算总行驶距离（圈数 * 转换系数 = 米）
-        double distanceMeters = driveMotor.getPosition().getValueAsDouble() * 
-                                Constants.Module.DRIVE_MPS_PER_RPS;
+        double distanceMeters = driveMotor.getPosition().getValueAsDouble() * Constants.Module.DRIVE_MPS_PER_RPS;
         
         // 获取当前角度
         Rotation2d angle = getAngle();

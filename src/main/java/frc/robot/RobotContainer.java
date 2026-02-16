@@ -1,6 +1,9 @@
 // Copyright (c) FIRST and other WPILib contributors.
 package frc.robot;
 
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,10 +63,10 @@ public class RobotContainer {
                 forward * Constants.Drivetrain.MAX_FORWARD_SPEED_MPS * m_speedMultiplier,
                 strafe * Constants.Drivetrain.MAX_STRAFE_SPEED_MPS * m_speedMultiplier,
                 rotation * Constants.Drivetrain.MAX_ROTATE_SPEED_RAD_PER_SEC,
-                true  
+                Constants.State.FIELD_RELATIVE
             );
         }, m_drivetrain)
-    );
+        );
 
         //机器人禁用时停止所有电机
         RobotModeTriggers.disabled().whileTrue(
@@ -71,52 +74,34 @@ public class RobotContainer {
         );
 
         // ===== 按钮功能 =====
-        
-        // A键：重置陀螺仪（当前方向设为前方）
-        m_driverController.a().onTrue(
-            Commands.runOnce(() -> m_drivetrain.zeroGyro(), m_drivetrain)
+
+        m_driverController.a().whileTrue(
+        Commands.run(() -> {
+            System.out.println("测试驱动电机 5");
+            new TalonFX(5).setControl(new VoltageOut(0.5));
+        }, m_drivetrain)
         );
 
-        // B键：速度倍率切换（正常 vs 慢速）
-        m_driverController.b().toggleOnTrue(
-            Commands.runOnce(() -> {
-                if (m_speedMultiplier == Constants.OI.DEFAULT_SPEED_MULTIPLIER) {
-                    m_speedMultiplier = 1.0;  // 全速
-                } else {
-                    m_speedMultiplier = Constants.OI.DEFAULT_SPEED_MULTIPLIER;  // 慢速
-                }
-            })
+        m_driverController.b().whileTrue(
+            Commands.run(() -> {
+                System.out.println("测试驱动电机 6");
+                new TalonFX(6).setControl(new VoltageOut(0.5));
+            }, m_drivetrain)
         );
 
-            // X键：原地旋转演示 - 🔴 修改
         m_driverController.x().whileTrue(
-            Commands.run(() -> 
-                m_drivetrain.drive(0, 0, 0.5 * m_maxAngularRate, true),
-                m_drivetrain
-            )
+            Commands.run(() -> {
+                System.out.println("测试驱动电机 7");
+                new TalonFX(7).setControl(new VoltageOut(0.5));
+            }, m_drivetrain)
         );
 
-        // Y键：原地旋转演示 - 🔴 修改
         m_driverController.y().whileTrue(
-            Commands.run(() -> 
-                m_drivetrain.drive(0, 0, -0.5 * m_maxAngularRate, true),
-                m_drivetrain
-            )
+            Commands.run(() -> {
+                System.out.println("测试驱动电机 8");
+                new TalonFX(8).setControl(new VoltageOut(0.5));
+            }, m_drivetrain)
         );
-
-        // 左肩键：重置所有模块（调试用）
-        m_driverController.leftBumper().onTrue(
-            Commands.runOnce(() -> m_drivetrain.resetModules(), m_drivetrain)
-        );
-
-         // 右肩键：前进演示 - 🔴 修改
-        m_driverController.rightBumper().whileTrue(
-        Commands.run(() -> 
-            m_drivetrain.drive(0.3 * m_maxSpeed, 0, 0, true),
-            m_drivetrain
-        )
-        );
-
 
         // 左扳机：慢速模式
         m_driverController.leftTrigger().onTrue(

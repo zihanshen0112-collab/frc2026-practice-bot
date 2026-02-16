@@ -13,16 +13,16 @@ public final class Constants {
     // ========== CAN 总线 ID（根据实际布线修改！）==========
     public static final class CAN {
         // 驱动电机 (Kraken X60) - 控制轮子转动
-        public static final int FRONT_LEFT_DRIVE  = 5;
+        public static final int FRONT_LEFT_DRIVE  = 4;
         public static final int FRONT_RIGHT_DRIVE = 6;
-        public static final int BACK_LEFT_DRIVE   = 7;
+        public static final int BACK_LEFT_DRIVE   = 2;
         public static final int BACK_RIGHT_DRIVE  = 8;
 
         // 转向电机 (Kraken X44) - 控制轮子方向
-        public static final int FRONT_LEFT_STEER   = 1;
-        public static final int FRONT_RIGHT_STEER  = 2;
-        public static final int BACK_LEFT_STEER    = 3;
-        public static final int BACK_RIGHT_STEER   = 4;
+        public static final int FRONT_LEFT_STEER   = 3;
+        public static final int FRONT_RIGHT_STEER  = 7;
+        public static final int BACK_LEFT_STEER    = 1;
+        public static final int BACK_RIGHT_STEER   = 5;
 
         // 陀螺仪（如果有，暂时预留）
         public static final int PIGEON_ID = 15;
@@ -34,7 +34,7 @@ public final class Constants {
         public static final double STEER_GEAR_RATIO = 12.8; //待修改
         
         //驱动电机减速比 (电机转数 : 轮子转数) - Kraken X60 
-        public static final double DRIVE_GEAR_RATIO = 8.14; //待修改
+        public static final double DRIVE_GEAR_RATIO = 6.75; //待修改
 
         //轮子直径（米）- 4英寸 = 0.1016米 
         public static final double WHEEL_DIAMETER_METERS = 0.1016; //待修改
@@ -49,9 +49,9 @@ public final class Constants {
         public static final double STEER_RAD_PER_ROT = 2 * Math.PI / STEER_GEAR_RATIO;
 
         // ===== 转向电机 PID 值（需实测调整）=====
-        public static final double STEER_kP = 0.5;
+        public static final double STEER_kP = 2.0;
         public static final double STEER_kI = 0.0;
-        public static final double STEER_kD = 0.0;
+        public static final double STEER_kD = 0.1;
 
         // ===== 电机电流限制 =====
         public static final int DRIVE_CURRENT_LIMIT = 40; // Kraken X60
