@@ -68,7 +68,6 @@ public class SwerveModule {
         configDriveMotor();
         configSteerMotor();
 
-        // 关键修复：从绝对编码器读取初始位置并应用偏移
         initializeSteerMotor();
     }
 
